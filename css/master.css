@@ -10,38 +10,61 @@ body {
 }
 
 form#bar {
-    margin: 0 1em;
-	width: 9em;
+    margin: 1.4em 1em 0;
+	width: 16em;
 	float: left;
 }
 
-form label {
+form label, #misc h2 {
     display: block;
     text-transform: uppercase;
+    font-weight: normal;
     letter-spacing: 1px;
     margin-top: 1em;
     font-size: .75em;
-    text-shadow: 0 1px 0 #eef, 1px 1px 0 #dde, -1px 1px 0 #dde;
+    text-shadow: 0 1px 0 #fff, 1px 1px 0 #eef, -1px 1px 0 #eef;
 }
 
-input#time, input#from, input#to {
+label {
+    cursor: pointer;
+}
+
+#misc label {
+    display: inline;
+    text-transform: none;
+    text-shadow: none;
+    color: #333;
+}
+
+input#time, input#from, input#in {
 	margin: 0 auto;
 	width: 10em;
 	font: 1.5em "Helvetica Neue", sans-serif;
 	letter-spacing: -1px;
 	padding: .1em .3em;
-	border: 1px solid #bbb;
+	border: 1px solid #aaa;
 	box-shadow: 1px 1px 1px #ccc;
 	-moz-box-shadow: 1px 1px 1px #ccc;
 	-webkit-box-shadow: 1px 1px 1px #ccc;
 	text-shadow: 1px 1px 1px #bbb;
-	-webkit-text-shadow: 1px 1px 1px #bbb;
 }
-input#time:focus, input#from:focus, input#to:focus {
+input#time:focus, input#from:focus, input#in:focus {
     background: #ffffcc;
-    border-color: #99b;
+    border-color: #88a;
 }
 
 #results {
     margin: 0 1em 2em 20em;
+}
+
+#results h2 {
+    text-shadow: 1px 1px 0 #fff;
+    color: #357;
+    font-size: 1.5em;
+}
+
+#results h2 strong {
+    font-size: 2em;
+    display: block;
+    color: #113;
 }

@@ -6,7 +6,6 @@
 		<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.8.custom.css" type="text/css" media="screen" charset="utf-8"/>
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.custom.js"></script>
-		<script type="text/javascript" src="js/date.js"></script>
 		<script type="text/javascript" src="js/site.js"></script>
 	</head>
 	<body>
@@ -17,19 +16,22 @@
 					<input id="time" type="text" value="10:00 p.m."/>
 				</div>
 				<div class="box">
-					<label for="from">From:</label>
-					<input id="from" type="text" value=""/>
+					<label for="in">Where:</label>
+					<input id="in" type="text" value=""/>
 				</div>
 				<div class="box">
-					<label for="to">To:</label>
-					<input id="to" type="text" value=""/>
+					<label for="from">Relative to:</label>
+					<input id="from" type="text" value=""/>
 				</div>
-				<div style="clear: left;"></div>
+				<div id="misc">
+					<h2>Display:</h2>
+					<input type="checkbox" id="ampm"/><label for="ampm">Use am/pm?</label>
+				</div>
 			</div>
 		</form>
 		
 		<div id="results">
-			
+			<h2 id="from-time"><span>Local</span> time is... <strong></strong></h2>
 		</div>
 	</body>
 </html>
