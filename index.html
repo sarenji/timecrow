@@ -3,6 +3,7 @@
 	<head>
 		<title>timecrow</title>
 		<link rel="stylesheet" href="css/master.css" type="text/css" media="screen" charset="utf-8"/>
+		<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.8.custom.css" type="text/css" media="screen" charset="utf-8"/>
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.custom.js"></script>
 		<script type="text/javascript" src="js/date.js"></script>
@@ -10,7 +11,21 @@
 	</head>
 	<body>
 		<form id="bar">
-			<input id="search" type="text" value="10:00"/>
+			<div id="ui-widget">
+				<div class="box">
+					<label for="time">Time:</label>
+					<input id="time" type="text" value="10:00 p.m."/>
+				</div>
+				<div class="box">
+					<label for="from">From:</label>
+					<input id="from" type="text" value=""/>
+				</div>
+				<div class="box">
+					<label for="to">To:</label>
+					<input id="to" type="text" value=""/>
+				</div>
+				<div style="clear: left;"></div>
+			</div>
 		</form>
 		
 		<div id="results">

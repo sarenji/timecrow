@@ -2154,12 +2154,25 @@ function validate(value, max, min) {
 }
 
 $(function() {
-    $("input#search")
+    var labels = [];
+    for (var k in cities) {
+        labels.push(k);
+    }
+	var now = new Date();
+    var hours = now.getHours();
+    var mins = now.getMinutes();
+    var timeOfDay = "a.m.";
+    if (hours > 12) {
+        timeOfDay = "p.m.";
+        hours -= 12;
+    }
+    var nowTime = hours + ":" + mins + " " + timeOfDay;
+    $("input#time")
         .focus()
+        .val(nowTime)
         //.val(Date.today().toString())
         .keyup(function(e) {
             var val = $(this).val().toLowerCase();
-            val = val.replace(/^\s*(.*)\s*$/, "$1");
             if (val.match(TIME)) {
                 var hours = parseInt(RegExp.$1, 10);
                 var minutes = RegExp.$2 ? parseInt(RegExp.$2, 10) : 0;
@@ -2167,7 +2180,7 @@ $(function() {
                 if (!validate(hours, 24) || !validate(minutes, 60))
                     return;
                 var date = new Date();
-                if (hourOfDay == 'p') {
+                if (hourOfDay == 'p' && hours < 12) {
                     hours += 12;
                 }
                 date.setUTCHours(hours);
@@ -2177,7 +2190,17 @@ $(function() {
                 $("#results").text(date.toUTCString());
             }
         });
-    $("form").submit(function() {
+    $("input#from, input#to")
+        .autocomplete({
+			minLength: 0,
+			source: labels,
+			delay: 10,
+			focus: function() {
+				// prevent value inserted on focus
+				return false;
+			}
+		});
+    $("form").submit(function(f) {
         return false;
     });
 });
