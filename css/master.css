@@ -1,0 +1,25 @@
+html, body {
+    font: 100% "Helvetica Neue", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+form#bar {
+    margin: 2.75em 0;
+}
+
+input#search {
+	width: 18.75em;
+	margin: 0 auto;
+	display: block;
+	font: 2em "Helvetica Neue", sans-serif;
+	font-weight: bold;
+	letter-spacing: -1px;
+	padding: .1em .3em;
+	border: 1px solid #bbb;
+	box-shadow: 1px 1px 1px #ccc;
+	-moz-box-shadow: 1px 1px 1px #ccc;
+	-webkit-box-shadow: 1px 1px 1px #ccc;
+	text-shadow: 1px 1px 1px #bbb;
+	-webkit-text-shadow: 1px 1px 1px #bbb;
+}
