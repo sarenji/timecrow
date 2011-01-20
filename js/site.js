@@ -8,6 +8,9 @@ var DATE_ONE = /\d\d[-,.\/]\d\d[-,.\/]\d\d(\d\d)?/;
 var DATE_TWO = new RegExp(MONTH_REGEXP + '[,\s]\s*\d{1,2}(st|nd|rd|th)([,\s]\s*\d\d\d\d)?');
 var DATE_THREE = new RegExp('[,\s]\s*\d{1,2}(st|nd|rd|th)' + MONTH_REGEXP + '([,\s]\s*\d\d\d\d)?');
 
+var LOCAL_TIME_STRING = "local time";
+var DEFAULT_CLASS = "grey"; // the class used to grey out default options.
+
 var cities = {
     "Aba":"Africa/Lagos",
     "Abeokuta":"Africa/Lagos",
@@ -1595,29 +1598,44 @@ function validate(value, max, min) {
     return value >= (min || 0) && value <= max;
 }
 
-function format(date) {
-    var month = MONTHS_SHORT[date.getUTCMonth()];
-    month = month[0].toUpperCase() + month.substr(1);
-    var day   = date.getUTCDate();
-    var hour  = date.getUTCHours();
-    var min   = date.getUTCMinutes();
-    var timeOfDay = "a.m.";
-    var ret   = "";
-    ret += month;
-    ret += ". "
-    ret += day;
-    ret += ", ";
-    if (hour > 12) {
-        timeOfDay = "p.m.";
-        hour -= 12;
+function update() {
+    var date = Date.parse($("input#time").val());
+    var rel  = new Date(date);
+    var place = cities[$("#in").val()];
+    var placeOffset = date.getTimezoneOffset();
+    if (place) {
+        $("#in-time span").text($("#in").val());
+        placeOffset = olson[place]/60;
+    } else {
+         $("#in-time span").text(LOCAL_TIME_STRING);
     }
-    ret += hour;
-    ret += ":";
-    if (min < 10) ret += "0";
-    ret += min;
-    ret += " ";
-    ret += timeOfDay;
-    return ret;
+    var relPlace = cities[$("#from").val()];
+    if (relPlace) {
+        rel = new Date(date);
+        rel.setUTCMinutes(date.getUTCMinutes() - placeOffset + olson[relPlace]/60);
+        $("#from-time span").text($("#from").val());
+    } else {
+        rel = new Date(date);
+        rel.setUTCMinutes(date.getUTCMinutes() - placeOffset - date.getTimezoneOffset());
+        $("#from-time span").text(LOCAL_TIME_STRING);
+    }
+    // TODO: Don't do relative to if #in == #from
+    $("#in-time strong").text(date.toString("MMM. d, yyyy, hh:mm tt"));
+    $("#from-time strong").text(rel.toString("MMM. d, yyyy, hh:mm tt"));
+}
+
+function setDefaultValue(jQueryObj, value) {
+    jQueryObj.blur(function() {
+	    if (!jQueryObj.val() || jQueryObj.val() == value) {
+	        jQueryObj.val(value);
+	        jQueryObj.addClass(DEFAULT_CLASS);
+        }
+	}).focus(function() {
+	    if (jQueryObj.val() == value) {
+	        jQueryObj.removeClass(DEFAULT_CLASS);
+	        jQueryObj.val("");
+        }
+    }).val(value);
 }
 
 $(function() {
@@ -1625,51 +1643,14 @@ $(function() {
     for (var k in cities) {
         labels.push(k);
     }
-	var now = new Date();
-    var hours = now.getHours();
-    var mins = now.getMinutes();
-    var timeOfDay = "a.m.";
-    if (hours > 12) {
-        timeOfDay = "p.m.";
-        hours -= 12;
-    }
-    if (mins < 10) mins = "0" + mins;
-    var nowTime = hours + ":" + mins + " " + timeOfDay;
-    function update() {
-        var val = $("input#time").val().toLowerCase();
-        if (val.match(TIME)) {
-            var hours = parseInt(RegExp.$1, 10);
-            var minutes = RegExp.$2 ? parseInt(RegExp.$2, 10) : 0;
-            var hourOfDay = RegExp.$3.replace(/\./g, "");
-            if (!validate(hours, 24) || !validate(minutes, 60))
-                return;
-            var date = new Date();
-            if (hourOfDay == 'p' && hours < 12) {
-                hours += 12;
-            }
-            date.setUTCHours(hours);
-            date.setUTCMinutes(minutes);
-            date.setUTCSeconds(0);
-            date.setUTCMilliseconds(0);
-            var place = cities[$("#in").val()];
-            if (place) {
-                $("#results h2 span").text($("#in").val());
-                date.setMinutes(date.getMinutes() + olson[place]/60 + date.getTimezoneOffset());
-                // TODO: Calculate relative to.
-            } else {
-                 $("#results h2 span").text("Local");
-             }
-            $("#results h2 strong").text(format(date));
-        }
-    }
     $("input#time")
-        .focus()
-        .val(nowTime)
-        //.val(Date.today().toString())
+        .val(Date.parse("now").toString("h:mm tt").toLowerCase())
+        .select()
         .keyup(function(e) {
             update();
         });
     $("input#from, input#in")
+        .addClass(DEFAULT_CLASS)
         .autocomplete({
 			minLength: 3,
 			source: labels,
@@ -1685,7 +1666,10 @@ $(function() {
 			    update();
 		    }
 		});
+    setDefaultValue($("input#in"), "local time");
+    setDefaultValue($("input#from"), "local");
     $("form").submit(function(f) {
         return false;
     });
+    update();
 });

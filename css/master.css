@@ -5,24 +5,42 @@ html, body {
     background: #C5E6FF;
 }
 
-body {
-    padding-top: 1em;
+.wrapper {
+    margin: 0 auto;
+    width: 60em;
+}
+
+#header {
+    background: #246;
+    border-bottom: .5em solid #024;
+    padding: 2em 0;
+    margin: 0;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #7ac;
+    text-shadow: 1px 1px 1px #012;
 }
 
 form#bar {
-    margin: 1.4em 1em 0;
-	width: 16em;
-	float: left;
+    margin: 1.4em 0 0;
+}
+
+form#bar .box {
+    float: left;
+    margin-right: 1em;
 }
 
 form label, #misc h2 {
     display: block;
-    text-transform: uppercase;
+    text-transform: lowercase;
     font-weight: normal;
-    letter-spacing: 1px;
-    margin-top: 1em;
+    margin: .5em 0;
     font-size: .75em;
-    text-shadow: 0 1px 0 #fff, 1px 1px 0 #eef, -1px 1px 0 #eef;
+    text-shadow: 1px 1px 0 #000;
+    color: #ded;
 }
 
 label {
@@ -33,7 +51,9 @@ label {
     display: inline;
     text-transform: none;
     text-shadow: none;
-    color: #333;
+    letter-spacing: 0;
+    color: #8bd;
+    text-shadow: 1px 1px 0 #000;
 }
 
 input#time, input#from, input#in {
@@ -43,9 +63,9 @@ input#time, input#from, input#in {
 	letter-spacing: -1px;
 	padding: .1em .3em;
 	border: 1px solid #aaa;
-	box-shadow: 1px 1px 1px #ccc;
-	-moz-box-shadow: 1px 1px 1px #ccc;
-	-webkit-box-shadow: 1px 1px 1px #ccc;
+	box-shadow: 1px 1px 1px #7ac;
+	-moz-box-shadow: 1px 1px 1px #7ac;
+	-webkit-box-shadow: 1px 1px 1px #7ac;
 	text-shadow: 1px 1px 1px #bbb;
 }
 input#time:focus, input#from:focus, input#in:focus {
@@ -53,17 +73,27 @@ input#time:focus, input#from:focus, input#in:focus {
     border-color: #88a;
 }
 
-#results {
-    margin: 0 1em 2em 20em;
+input#from.grey, input#in.grey {
+    color: #bbb;
+    text-shadow: 1px 1px 1px #eee;
 }
 
-#results h2 {
-    text-shadow: 1px 1px 0 #fff;
+#results {
+}
+
+#results #in-time, #results #from-time {
     color: #357;
     font-size: 1.5em;
+    font-weight: bold;
+    margin: 1em 0;
 }
 
-#results h2 strong {
+#results #from-time {
+    margin: 2em 0;
+}
+
+#results #in-time strong, #results #from-time strong {
+    text-shadow: 2px 2px 0 #fff, 1px 1px 0 #fff;
     font-size: 2em;
     display: block;
     color: #113;
