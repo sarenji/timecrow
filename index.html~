@@ -4,7 +4,6 @@
 		<title>timecrow</title>
 		<link rel="stylesheet" href="css/master.css" type="text/css" media="screen" charset="utf-8"/>
 		<script type="text/javascript" src="js/jquery.js"></script>
-		<script type="text/javascript" src="js/jquery.ui.custom.js"></script>
 		<script type="text/javascript" src="js/date.js"></script>
 		<script type="text/javascript" src="js/site.js"></script>
 	</head>
