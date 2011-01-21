@@ -1,15 +1,7 @@
-var MONTHS_SHORT = [ "jan", "feb", "mar", "apr", "may", "aug", "sep", "sept", "oct", "nov", "dec" ];
-var MONTHS_LONG  = [ "january", "february", "march", "april", "may", "august", "september",
-                     "october", "november", "december" ];
-var MONTH_REGEXP = "(" + MONTHS_SHORT.join("|") + "|" + MONTHS_LONG.join("|") + ")";
-
-var TIME = /(\d{1,2})[.:,]?(\d{0,2})\s*(a|p)?\.?m?\.?/;
-var DATE_ONE = /\d\d[-,.\/]\d\d[-,.\/]\d\d(\d\d)?/;
-var DATE_TWO = new RegExp(MONTH_REGEXP + '[,\s]\s*\d{1,2}(st|nd|rd|th)([,\s]\s*\d\d\d\d)?');
-var DATE_THREE = new RegExp('[,\s]\s*\d{1,2}(st|nd|rd|th)' + MONTH_REGEXP + '([,\s]\s*\d\d\d\d)?');
-
 var LOCAL_TIME_STRING = "local time";
 var DEFAULT_CLASS = "grey"; // the class used to grey out default options.
+
+var timeMap = {};
 
 var cities = {
     "Aba":"Africa/Lagos",
@@ -1594,55 +1586,102 @@ var gmts = {"GMT":0.0,
 "Z (Zulu Time Zone)":0.0,
 "Zulu Time Zone (Z)":0.0};
 
-function validate(value, max, min) {
-    return value >= (min || 0) && value <= max;
+function format(id, date) {
+    var obj = $(id);
+    var monthName = date.toString("MMM");
+    var dayName   = date.toString("ddd");
+    var year      = date.toString("yyyy");
+    var hourmin   = date.toString("h:mm");
+    var ampm      = date.toString("tt").toLowerCase();
+    return
 }
 
 function update() {
     var date = Date.parse($("input#time").val());
-    var rel  = new Date(date);
-    var place = cities[$("#in").val()];
-    var placeOffset = date.getTimezoneOffset();
-    if (place) {
-        $("#in-time span").text($("#in").val());
-        placeOffset = olson[place]/60;
+    var rela = new Date(date);
+    var tzOffset = date.getTimezoneOffset();
+    var inKey = $("#in").val().toLowerCase();
+    var placeOffset = 0;
+    
+    // Get time offset for the first input
+    if (inKey in timeMap) {
+        $("#in-time span").text("Time in " + $("#in").val());
+        placeOffset = timeMap[inKey]/60;
     } else {
-         $("#in-time span").text(LOCAL_TIME_STRING);
+         $("#in-time span").text("Time in " + LOCAL_TIME_STRING);
+         placeOffset = -tzOffset;
+         inKey = LOCAL_TIME_STRING;
     }
-    var relPlace = cities[$("#from").val()];
-    if (relPlace) {
-        rel = new Date(date);
-        rel.setUTCMinutes(date.getUTCMinutes() - placeOffset + olson[relPlace]/60);
-        $("#from-time span").text($("#from").val());
+    
+    // update datetime text
+    $("#in-time .date").text(date.toString("MMM. d, yyyy"));
+    $("#in-time .time").text(date.toString("dddd, h:mm tt"));
+    
+    // Get time offset for the second input
+    var fromKey = $("#from").val().toLowerCase();
+    if (fromKey in timeMap) {
+        rela.setUTCMinutes(date.getUTCMinutes() - placeOffset + timeMap[fromKey]/60);
+        $("#from-time span").text("Time in " + $("#from").val());
     } else {
-        rel = new Date(date);
-        rel.setUTCMinutes(date.getUTCMinutes() - placeOffset - date.getTimezoneOffset());
-        $("#from-time span").text(LOCAL_TIME_STRING);
+        rela.setUTCMinutes(date.getUTCMinutes() - placeOffset + tzOffset);
+        $("#from-time span").text("Defaulting to " + LOCAL_TIME_STRING);
+        fromKey = LOCAL_TIME_STRING;
     }
-    // TODO: Don't do relative to if #in == #from
-    $("#in-time strong").text(date.toString("MMM. d, yyyy, hh:mm tt"));
-    $("#from-time strong").text(rel.toString("MMM. d, yyyy, hh:mm tt"));
+    
+    // hide the second time display when necessary
+    if (inKey == fromKey) {
+        $("#from-time").hide();
+    } else {
+        $("#from-time").show();
+    }
+    
+    // TODO: Fill in #other-time with... other times
+    
+    
+    // update datetime text
+    $("#from-time .date").text(rela.toString("MMM. d, yyyy"));
+    $("#from-time .time").text(rela.toString("dddd, h:mm tt"));
 }
 
-function setDefaultValue(jQueryObj, value) {
-    jQueryObj.blur(function() {
-	    if (!jQueryObj.val() || jQueryObj.val() == value) {
-	        jQueryObj.val(value);
-	        jQueryObj.addClass(DEFAULT_CLASS);
-        }
-	}).focus(function() {
-	    if (jQueryObj.val() == value) {
-	        jQueryObj.removeClass(DEFAULT_CLASS);
-	        jQueryObj.val("");
-        }
-    }).val(value);
+$.fn.setDefaultValue = function(value) {
+    return this.each(function() {
+        var jQueryObj = $(this);
+        jQueryObj.blur(function() {
+    	    if (!jQueryObj.val() || jQueryObj.val() == value) {
+    	        jQueryObj.val(value);
+    	        jQueryObj.addClass(DEFAULT_CLASS);
+            }
+    	}).focus(function() {
+    	    if (jQueryObj.val() == value) {
+    	        jQueryObj.removeClass(DEFAULT_CLASS);
+    	        jQueryObj.val("");
+            }
+        }).val(value);
+    });
 }
 
 $(function() {
     var labels = [];
     for (var k in cities) {
         labels.push(k);
+        timeMap[k.toLowerCase()] = olson[cities[k]];
     }
+    for (var k in olson) {
+        labels.push(k);
+        timeMap[k.toLowerCase()] = olson[k];
+    }
+    for (var k in gmts) {
+        labels.push(k);
+        timeMap[k.toLowerCase()] = gmts[k];
+    }
+    for (var k in tznames) {
+        labels.push(k);
+        timeMap[k.toLowerCase()] = tznames[k];
+    }
+    
+    labels.push(LOCAL_TIME_STRING);
+    timeMap[LOCAL_TIME_STRING] = -(new Date()).getTimezoneOffset() * 60;
+    
     $("input#time")
         .val(Date.parse("now").toString("h:mm tt").toLowerCase())
         .select()
@@ -1652,12 +1691,11 @@ $(function() {
     $("input#from, input#in")
         .addClass(DEFAULT_CLASS)
         .autocomplete({
-			minLength: 3,
+			minLength: 2,
 			source: labels,
 			delay: 10,
 			focus: function() {
-				// prevent value inserted on focus
-				return false;
+				update();
 			},
 			close: function(event, ui) {
 			    update();
@@ -1665,9 +1703,7 @@ $(function() {
 			search: function(event, ui) {
 			    update();
 		    }
-		});
-    setDefaultValue($("input#in"), "local time");
-    setDefaultValue($("input#from"), "local");
+		}).setDefaultValue(LOCAL_TIME_STRING);
     $("form").submit(function(f) {
         return false;
     });

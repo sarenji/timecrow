@@ -13,23 +13,23 @@
 		<div id="header">
 			<div class="wrapper">
 				<h1>timecrow</h1>
+				<p>A timezone convertor powered by crows</p>
 				<form id="bar">
 					<div id="ui-widget">
 						<div class="box">
-							<label for="time">Time/Date:</label>
+							<label for="time">Tell me this time/date</label>
 							<input id="time" type="text" value=""/>
 						</div>
 						<div class="box">
-							<label for="in">In:</label>
-							<input id="in" type="text" value=""/>
+							<label for="from">converted to this timezone</label>
+							<input id="from" type="text" value=""/>
 						</div>
 						<div class="box">
-							<label for="from">Where are you?</label>
-							<input id="from" type="text" value=""/>
+							<label for="in">where are you? <span>(optional)</span></label>
+							<input id="in" type="text" value=""/>
 						</div>
 						<div style="clear:both;"></div>
 						<div id="misc">
-							<h2>Display:</h2>
 							<input type="checkbox" id="ampm"/><label for="ampm">Use 24-hour clock?</label>
 						</div>
 					</div>
@@ -38,8 +38,18 @@
 		</div>
 		<div class="wrapper">
 			<div id="results">
-				<div id="in-time">In <span>local time</span>: <strong></strong></div>
-				<div id="from-time">In <span>local time</span>: <strong></strong></div>
+				<div id="from-time">
+					<span></span>
+					<div class="date"></div>
+					<div class="time"></div>
+				</div>
+				<div id="in-time">
+					<span></span>
+					<div class="date"></div>
+					<div class="time"></div>
+				</div>
+				<div id="other-time"><span>other places</span></div>
+				
 			</div>
 		</div>
 	</body>

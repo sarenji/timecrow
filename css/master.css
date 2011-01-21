@@ -2,7 +2,7 @@ html, body {
     font: 100% "Helvetica Neue", sans-serif;
     margin: 0;
     padding: 0;
-    background: #C5E6FF;
+    background: #FFFFE0;
 }
 
 .wrapper {
@@ -13,19 +13,29 @@ html, body {
 #header {
     background: #246;
     border-bottom: .5em solid #024;
-    padding: 2em 0;
+    padding-top: 2em;
     margin: 0;
 }
 
 h1 {
     margin: 0;
     font-size: 2em;
-    color: #7ac;
+    color: #8bd;
     text-shadow: 1px 1px 1px #012;
+    font-weight: bold;
+}
+
+#header p {
+    text-transform: lowercase;
+    margin: 0;
+    font-size: .75em;
+    text-shadow: 1px 1px 0 #000;
+    color: #7793aa;
+    font-weight: bold;
 }
 
 form#bar {
-    margin: 1.4em 0 0;
+    margin: 2em 0;
 }
 
 form#bar .box {
@@ -40,11 +50,15 @@ form label, #misc h2 {
     margin: .5em 0;
     font-size: .75em;
     text-shadow: 1px 1px 0 #000;
-    color: #ded;
+    color: #eed;
 }
 
-label {
+form label {
     cursor: pointer;
+}
+
+form#bar label span {
+    color: #8bd;
 }
 
 #misc label {
@@ -62,39 +76,64 @@ input#time, input#from, input#in {
 	font: 1.5em "Helvetica Neue", sans-serif;
 	letter-spacing: -1px;
 	padding: .1em .3em;
+	background: #eef5ff;
 	border: 1px solid #aaa;
-	box-shadow: 1px 1px 1px #7ac;
-	-moz-box-shadow: 1px 1px 1px #7ac;
-	-webkit-box-shadow: 1px 1px 1px #7ac;
+	box-shadow: 2px 2px 2px #024;
+	-moz-box-shadow: 2px 2px 2px #024;
+	-webkit-box-shadow: 2px 2px 2px #024;
 	text-shadow: 1px 1px 1px #bbb;
 }
 input#time:focus, input#from:focus, input#in:focus {
-    background: #ffffcc;
+    background: #FFFFE0;
     border-color: #88a;
 }
 
 input#from.grey, input#in.grey {
-    color: #bbb;
+    color: #aaa;
     text-shadow: 1px 1px 1px #eee;
 }
 
 #results {
-}
-
-#results #in-time, #results #from-time {
-    color: #357;
+    color: #8ac;
     font-size: 1.5em;
     font-weight: bold;
-    margin: 1em 0;
+    position: relative;
 }
 
-#results #from-time {
+#results #from-time, #results #in-time, #results #other-time {
     margin: 2em 0;
 }
 
-#results #in-time strong, #results #from-time strong {
-    text-shadow: 2px 2px 0 #fff, 1px 1px 0 #fff;
+#results .date, #results div span span {
+    font-size: .5em;
+    text-transform: uppercase;
+    color: #357;
+}
+
+#results .date {
+    position: relative;
+    top: .5em;
+}
+
+#results .time {
+    font-size: 2em;
+    display: block;
+    color: #135;
+    font-weight: bold;
+}
+
+#results div span {
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
+
+#results div strong {
     font-size: 2em;
     display: block;
     color: #113;
+}
+
+#results .box {
+    float: left;
+    width: 33%;
 }
