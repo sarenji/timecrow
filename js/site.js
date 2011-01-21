@@ -1614,8 +1614,11 @@ function getLocalTime() {
         var hourOfDay = RegExp.$3.replace(/\./g, "");
         if (!validate(hours, 24) || !validate(minutes, 60))
             return;
-        if (hourOfDay == 'p') {
+        if (hourOfDay == 'p' && hours != 12) {
             hours += 12;
+        }
+        if (hourOfDay == 'a' && hours == 12) {
+            hours -= 12;
         }
         date.setUTCHours(hours);
         date.setUTCMinutes(minutes + date.getTimezoneOffset());
