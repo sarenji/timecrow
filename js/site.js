@@ -1,3 +1,4 @@
+var TIME = /\s*(\d{1,2})[.:,]?(\d{0,2})\s*(a|p)?\.?m?\.?\s*/;
 var LOCAL_TIME_STRING = "local time";
 var DEFAULT_CLASS = "grey"; // the class used to grey out default options.
 
@@ -1596,8 +1597,36 @@ function format(id, date) {
     return
 }
 
+function validate(value, min, max) {
+    if (!max) {
+        max = min;
+        min = 0;
+    }
+    return value >= min && value <= max;
+}
+
+function getLocalTime() {
+    var val = $("#time").val().toLowerCase();
+    var date = Date.parse(val.replace(TIME, "")) || Date.parse("now");
+    if (val.match(TIME)) {
+        var hours = parseInt(RegExp.$1, 10);
+        var minutes = RegExp.$2 ? parseInt(RegExp.$2, 10) : 0;
+        var hourOfDay = RegExp.$3.replace(/\./g, "");
+        if (!validate(hours, 24) || !validate(minutes, 60))
+            return;
+        if (hourOfDay == 'p') {
+            hours += 12;
+        }
+        date.setUTCHours(hours);
+        date.setUTCMinutes(minutes + date.getTimezoneOffset());
+        date.setUTCSeconds(0);
+        date.setUTCMilliseconds(0);
+    }
+    return date;
+}
+
 function update() {
-    var date = Date.parse($("input#time").val());
+    var date = getLocalTime();
     var rela = new Date(date);
     var tzOffset = date.getTimezoneOffset();
     var inKey = $("#in").val().toLowerCase();
@@ -1635,12 +1664,13 @@ function update() {
         $("#from-time").show();
     }
     
-    // TODO: Fill in #other-time with... other times
-    
-    
     // update datetime text
     $("#from-time .date").text(rela.toString("MMM. d, yyyy"));
     $("#from-time .time").text(rela.toString("dddd, h:mm tt"));
+    
+    // TODO: Fill in #other-time with... other times
+    
+    
 }
 
 $.fn.setDefaultValue = function(value) {
@@ -1694,6 +1724,7 @@ $(function() {
 			minLength: 2,
 			source: labels,
 			delay: 10,
+			alwaysSelected: true,
 			focus: function() {
 				update();
 			},
